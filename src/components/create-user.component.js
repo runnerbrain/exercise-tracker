@@ -1,15 +1,60 @@
 import React, { Component } from 'react';
-import { directive } from '@babel/types';
+import axios from 'axios';
 
 class CreateUser extends Component {
+  constructor(props) {
+    super(props);
 
-    render() {
-        return (
-            <div>
-                <p>This is the create user component</p>
-            </div>
-        );
-    }
+    this.state = {
+      username: '',
+      users: []
+    };
+  }
+
+  onChangeUsername = e => {
+    this.setState({ username: e.target.value });
+  };
+
+  onSubmit = e => {
+    e.preventDefault();
+    const user = {
+      username: this.state.username
+    };
+
+    console.log(user);
+
+    axios
+      .post('http://localhost:5000/users/add', user)
+      .then(res => console.log(res.data));
+    this.setState({ username: '' });
+  };
+
+  render() {
+    return (
+      <div className="container">
+        <h3>Create a new user</h3>
+        <form onSubmit={this.onSubmit}>
+          <div className="form-group">
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="username"
+              value={this.state.username}
+              onChange={this.onChangeUsername}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="submit"
+              value="Create User"
+              className="btn btn-primary"
+            />
+          </div>
+        </form>
+      </div>
+    );
+  }
 }
 
 export default CreateUser;
